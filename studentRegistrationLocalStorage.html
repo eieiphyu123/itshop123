@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Start Add Student Form -->
+    <div id="addStudent">
+        <h3>Add New Student</h3>        
+        <label for="">Name : </label><input type="text" id="name" name="name"><br><br>
+        <label for="">Email : </label><input type="email" id="email" name="email"><br><br>
+        <label for="">Phone : </label><input type="number" id="phone" name="phone"><br><br>
+        <label for="">Year: </label>
+        <select name="year" id="year">
+            <option value="First Year">First Year</option>
+            <option value="Second Year">Second Year</option>
+            <option value="Third Year">Third Year</option>
+        </select><br><br>
+        <button id="add">Add Student</button>        
+    </div>   
+    <!-- End Add Student Form -->
+
+        <!-- Start update Student Form -->
+        <div id="updateStudent">
+            <h3>Update Student</h3>        
+            <label for="">Name : </label><input type="text" id="upd_name" name="name"><br><br>
+            <label for="">Email : </label><input type="email" id="upd_email" name="email"><br><br>
+            <label for="">Phone : </label><input type="number" id="upd_phone" name="phone"><br><br>
+            <label for="">Year: </label>
+            <select name="year" id="upd_year">
+                <option value="First Year">First Year</option>
+                <option value="Second Year">Second Year</option>
+                <option value="Third Year">Third Year</option>
+            </select><br><br>
+            <input type="hidden" name="index" id="index"> <!-- ဘယိ index မှာ update လုပ်မှာလဲ သိအောင် index ကို ခေါ် ပြီးးထည့် ဖို့ input box တခုကို hidden လုပ်ပြီးထားထားမယ်-->
+            <button id="update">Update Student</button>        
+        </div>   
+        <!-- End of Student Form -->
+
+    <!-- Start of Student List  -->
+    <h3>Student List</h3>
+    <table border="1" cellpadding="20" cellspacing="0">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Year</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            
+        </tbody>
+    </table>
+    <!-- End of Student List -->
+    
+    <script src="jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            // data တွေ user screenပေါ်မှာ မြင်ရအောင် (user က add or deleteပဲ လုပ်လုပ်)
+            function getData(){
+                let stuString=localStorage.getItem('myStudents');//localstorge ထဲကို ထည့်ဖို့ data ဖမ်း mystudents က ကြိုက်တာပေး
+                if (stuString){
+                    let stuArray=JSON.parse(stuString);
+                    let data='';
+                    let j=1; 
+                    $.each(stuArray,function(i,v){ //$.each သည် array ရဲ့ 1 line ချင်း ခေါ် , j သည် index array အခန်းများ,v သည်  v is value of array. i v ကြိုက်တဲ့နဲမည် ပေးလို့ရ
+                        console.log(v);
+                    data += `<tr>
+                            <td>${j++}</td>
+                            <td>${v.stu_name}</td>
+                            <td>${v.stu_email}</td>
+                            <td>${v.stu_phone}</td>
+                            <td>${v.stu_year}</td>
+                            <td>
+                            <button class="edit" data-index="${i}" data-name="${v.stu_name}" data-email="${v.stu_email}" data-phone="${v.stu_phone}" data-year="${v.stu_year}">Edit</button>
+                            <button class="delete" data-index="${i}">Delete</button> 
+                            </td>
+                        </tr>`;   
+                    })
+                    // 
+                    $('#tbody').html(data);
+                }
+            }            
+            
+            getData(); // browser မှာ student data တွေ ြပနေဖို့ getData(); function တစ်ခါစခေါ်
+            $('#updateStudent').hide(); // စစချင်းမှာ update student form ကို hide ထားပေးရမယ်
+            
+
+            $('#add').click(function(){
+                let name=$('#name').val(); // add button ကို click တာနဲ့ create လုပ်ထားတဲ့ variable တွေထဲကို user input data တွေ စသိမ်းမယ်
+                let email=$('#email').val();
+                let phone=$('#phone').val();
+                let year=$('#year').val();
+                
+                // console.log(name,phone,email,year); // data တွေ တကယ် ပါ/မပါ console မှာ အရင်စစ်ကြည့်
+
+                let student_obj={
+                    stu_name:name, // ပါလာတဲ့ data တွေကို object တွေထဲမှာ သိမ်း
+                    stu_email:email,
+                    stu_phone:phone,
+                    stu_year:year,
+                };
+                let stuString=localStorage.getItem('myStudents');//localstorge ထဲကို ထည့်ဖို့ data ဖမ်း myStudents က ကြိုက်တဲ့ အမည် ပေးလို့ရ, but getItem('name') နဲ့  setItem('name') က တူရပါမယ် localstorage က string ပဲ ထုတ်ပေး /လကိခံ getItem('') နဲ့  localStorage ထဲက data ထုတ် ( ရှိပြီးသား data နဲ့ ထပ်ပေါင်းဖို့)
+                let stuArray;
+                if(stuString==null){ //စစထည့်ထည့်ချင်း
+                    stuArray=[];
+                }else{
+                    stuArray=JSON.parse(stuString);//String to JSOn Array; arry က  string လက်မခံတော့ string ကို JSON.parse() နဲ့ array ပုံစံ ပြောင်းပြီး array ထဲထည့် , stuString ထဲမှာ localStorage.getItem('') နဲ့ ကြို ထုတ်ထားတဲ့ data တွေ ပါပြီးသား ကို JSON.parse နဲ့ array ပြောင်း
+                }
+
+                // console.log(stuArray);
+                stuArray.push(student_obj);//push to array object ထဲထည့်
+
+                let stuData=JSON.stringify(stuArray);//Json.stringify Arry to string ပြန်ပြောင်း
+
+                localStorage.setItem('myStudents',stuData);//set data to local storage
+                 
+                    $('#name').val('');
+                    $('#email').val('');
+                    $('#phone').val('');
+                    $('#year').val('');
+
+                    getData();
+            })
+
+            $('#tbody').on('click','.delete',function(){
+                let index = $(this).data('index');
+                // console.log(index);
+                let stuString=localStorage.getItem('myStudents');//localstorge ထဲကို ထည့်ဖို့ data ဖမ်း mystudents က ကြိုက်တာပေး, local storage က data ပြန်ယူ string ပါလာ
+                if (stuString){
+                    let stuArray=JSON.parse(stuString);//change string to array
+                    let ans=confirm("Are you sure?");//return true flase ပြန်
+                    // console.log(ans);
+                    if(ans){// if return vale is true
+                        stuArray.splice(index,1); //ပါလာတဲ့ index ရြ့ 1 ခန်းပဲဖျက်မယ်, 2 ဆို 2ခန်း ဖျက်မယ်
+                        let stuData=JSON.stringify(stuArray);//Json.stringify Arry to string ပြန်ပြောင်း ရတယ်, locacal storage ထဲ ပြန်ထည့်ဖို့ 
+
+                        localStorage.setItem('myStudents',stuData);//string ပြောင်းထားတဲ့  data ကို  local storage ထဲထည့်
+
+                        getData(); // use screen မှာ update ပေါ်အောင်လို့ 
+                    }
+                }
+                
+            })
+
+            $('#tbody').on('click','.edit',function(){ //parent #tobody ကနေ .on('click','.edit',function() လှမ်းခေါ် တာက edit button တွေက အများကြီး မို့လို့  or loop ထဲမှာ မိုလို့
+                let index=$(this).data('index'); //edit လုပ်မယ့် student row ရဲ့ index ကိုဖမ်း ပြီး index variable ထဲထည့် htis က user edit နှိပ်လိုက်တဲ့ row က ယူမယ်လို့ ပြော
+                let name=$(this).data('name'); //edit လုပ်မယ့် student email ရဲ့ index ကိုဖမ်း $(this).data('index');
+                let email=$(this).data('email');
+                let phone=$(this).data('phone');
+                let year=$(this).data('year');
+                // console.log(index,name,email,phone,year);
+                $('#addStudent').hide(); // edit btn ကို click လိုက်ပြီ ဖြစ်တဲ့ အတွက် add student form ကို ့ hide လုပ်
+                $('#updateStudent').show();
+
+                $('#index').val(index);
+                $('#upd_name').val(name);
+                $('#upd_email').val(email);
+                $('#upd_phone').val(phone);
+                $('#upd_year').val(year);
+            })
+
+            $('#update').click(function(){
+                let index=$('#index').val();
+                let name=$('#upd_name').val();
+                let email=$('#upd_email').val();
+                let phone=$('#upd_phone').val();
+                let year=$('#upd_year').val();
+                // console.log(index,name,email,phone,year);
+                let stuString=localStorage.getItem('myStudents');
+                if(stuString){ 
+                    stuArray=JSON.parse(stuString);
+                    stuArray[index].stu_name=name;
+                    stuArray[index].stu_email=email;
+                    stuArray[index].stu_phone=phone;
+                    stuArray[index].stu_year=year;
+                    // console.log(stuArray);
+                    let stuData=JSON.stringify(stuArray);
+                    localStorage.setItem('myStudents',stuData);
+                    getData();
+                    $('#addStudent').show(); 
+                    $('#updateStudent').hide();
+                }
+            })
+        })
+    </script>
+</body>
+</html>

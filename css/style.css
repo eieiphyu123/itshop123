@@ -1,0 +1,78 @@
+*{
+    margin: 0;
+}
+.content{
+    width: 100%;    
+}
+.shop{
+    height: 60px;    
+    background-color: #f2f2f2;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+}
+.cartImg{    
+    position: relative;
+    top: 8px;
+    display: inline-block;
+    width: 25px;
+    border-radius: 5px;
+}
+.title{
+    display: inline;
+    float: left;
+    padding: 20px 0px 0px 30px;
+}
+.shopCart{
+    float: right;
+    padding: 10px 30px 0px 0px;
+}
+.shopCart a{
+    display: inline;
+    text-decoration: none; 
+}
+.cart{
+    position: relative; 
+    display: inline-block;
+    top: -15px;
+    left: -15px;
+    background-color: #d70216;
+    color: #FFFFF0;
+    width: 18px;
+    height: 17px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 14px;
+}
+
+.showTable{
+    margin: 30px;
+}
+.bestSeller{
+    margin: 30px;    
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 2%;
+    color: #36454F;   
+}
+.bestSeller div{
+    border: 1px solid #d2d2d2;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+.bestSeller img{
+    position: relative;    
+    margin-bottom: 10px;
+    width: 100%;
+    max-height: 255px; 
+}
+.bestSeller p{
+    margin: 10px 0px 20px 0px;
+}
+.bestSeller button{
+    background-color: #0e6efd;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+}
+
